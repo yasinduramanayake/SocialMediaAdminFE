@@ -35,3 +35,13 @@
 .tab_menu_buttons {
   padding-left: 10px;
 }
+.mobile_view_category_add {
+  @media (min-width: 800px) {
+    display: none;
+  }
+}
+.desktop_view_category_add {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}

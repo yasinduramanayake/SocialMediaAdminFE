@@ -1,5 +1,8 @@
 import Vue from "vue";
+import PortalVue from 'portal-vue'
 import { ToastPlugin, ModalPlugin } from "bootstrap-vue";
+import { VBTogglePlugin } from 'bootstrap-vue'
+
 import VueCompositionAPI from "@vue/composition-api";
 
 import router from "./router";
@@ -13,14 +16,18 @@ import "./global-components";
 import "@/libs/portal-vue";
 import "@/libs/toastification";
 
+import Vuesax from "vuesax";
+import "vuesax/dist/vuesax.css"; // Vuesax
+Vue.use(Vuesax);
 
 // BSV Plugin Registration
 Vue.use(ToastPlugin);
 Vue.use(ModalPlugin);
-
+Vue.use(VBTogglePlugin)
 // Composition API
 Vue.use(VueCompositionAPI);
 
+Vue.use(PortalVue)
 // import core styles
 require("@core/scss/core.scss");
 

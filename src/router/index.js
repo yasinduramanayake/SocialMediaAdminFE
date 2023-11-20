@@ -1,7 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import mainRoute from "./modules/home_route";
-
+import servicesRoute from "./modules/services_route";
+import ordersRoute from "./modules/orders_route";
 
 Vue.use(VueRouter);
 
@@ -11,9 +12,7 @@ const router = new VueRouter({
   scrollBehavior() {
     return { x: 0, y: 0 };
   },
-  routes: [
-    ...mainRoute,
-  ],
+  routes: [...mainRoute, ...servicesRoute, ...ordersRoute],
 });
 
 // ? For splash screen
