@@ -2,14 +2,25 @@
   <div>
     <br />
     <b-card :title="type">
-      <b-table responsive="sm" :items="orders" :fields="fields">
+      <b-table responsive="sm" :items="orderarray" :fields="fields">
+        <template #cell(order_details)="data">
+          <b>{{ data.value.category }} {{ data.value.subcategory }}</b>
+          <br />
+          <br />
+          <ul style="list-style-type: square">
+            <li>Quantity : {{ data.value.quantity }}</li>
+            <li>Price : {{ getPrice(data.value.price) }}</li>
+            <li>Quality : {{ data.value.quality }}</li>
+          </ul>
+        </template>
         <template #cell(status)="data">
-          <b-badge :variant="data.item.status.color">{{
-            data.item.status.data
-          }}</b-badge>
+          <b-badge variant="warning">{{ data.value }}</b-badge>
         </template>
         <template #cell(action)="data">
-          <b-row>
+          <b-button variant="success" @click="openStatusModal(data.item)">
+            Change Status</b-button
+          >
+          <!-- <b-row>
             <b-col md="6">
               <b-button variant="success">
                 <feather-icon icon="EditIcon" class="mr-25"
@@ -20,17 +31,25 @@
                 <feather-icon icon="DeleteIcon" class="mr-25"
               /></b-button>
             </b-col>
-          </b-row>
+          </b-row> -->
         </template>
       </b-table>
     </b-card>
+
+    <b-modal ref="ordermodal" hide-footer title="Change Status">
+      <div>
+        <ChangeStatus :orderdata="selectedItem" />
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
+import ChangeStatus from "@/views/Orders/Components/ChangeStatus";
 import {
   BCard,
   BTab,
+  BModal,
   BTabs,
   BTable,
   BBadge,
@@ -48,7 +67,8 @@ export default {
   components: {
     BTab,
     BTabs,
-
+    ChangeStatus,
+    BModal,
     BCard,
     BButton,
     BCol,
@@ -61,27 +81,30 @@ export default {
   },
   props: {
     type: String,
+    titleProp: String,
   },
   data() {
     return {
-      orders: [],
+      selectedItem: {},
+      orderarray: [],
+      pendingOrders: [],
+      processingOrders: [],
+      completedOrders: [],
       fields: [
         {
-          key: "orderid",
-          label: "Order Id",
+          key: "reference",
+          label: "Reference",
           sortable: true,
-          // thStyle: { width: "2%" },
-          // tdClass: "custom-cell-padding",
         },
+        // {
+        //   key: "customer",
+        //   label: "Customer",
+        //   sortable: true,
+        //   // thStyle: { width: "2%" },
+        //   // tdClass: "custom-cell-padding",
+        // },
         {
-          key: "customer",
-          label: "Customer",
-          sortable: true,
-          // thStyle: { width: "2%" },
-          // tdClass: "custom-cell-padding",
-        },
-        {
-          key: "orderdetails",
+          key: "order_details",
           label: "Order Info",
           sortable: true,
           // thStyle: { width: "5%" },
@@ -90,23 +113,17 @@ export default {
         {
           key: "created_at",
           label: "Created Date",
-          // thStyle: { width: "2%" },
-          // tdClass: "custom-cell-padding",
         },
         {
           key: "status",
           label: "Status",
           sortable: true,
-          // thStyle: { width: "2%" },
-          // tdClass: "custom-cell-padding",
         },
 
         {
           key: "action",
           label: "Action",
           sortable: true,
-          // thStyle: { width: "2%" },
-          // tdClass: "custom-cell-padding",
         },
       ],
 
@@ -122,16 +139,47 @@ export default {
       return "custom-cell-padding";
     },
 
+    openStatusModal(data) {
+      this.$refs.ordermodal.show();
+      this.selectedItem = data;
+    },
     async allOrders() {
-      const res = await orderApi.Allorders();
+      // get all order data
+      await this.$vs.loading({
+        scale: 0.8,
+      });
+      const res = await orderApi.Allorders().catch(() => {
+        this.$vs.loading.close();
+      });
       this.items = res.data.data;
 
-      this.items.forEach((value) => {
-        if (this.type === "All Orders") {
-          this.orders.push(value);
-        }
-      });
-      console.log(this.orders);
+      // store data to pending orders array
+
+      if (this.titleProp === "Pending") {
+        this.items.forEach((value) => {
+          this.pendingOrders.push(value);
+        });
+        this.orderarray = this.pendingOrders;
+      }
+
+      // store data to processing orders array
+
+      if (this.titleProp === "Processing") {
+        this.items.forEach((value) => {
+          this.processingOrders.push(value);
+        });
+        this.orderarray = this.pendingOrders;
+      }
+
+      // store data to completed orders array
+
+      if (this.titleProp === "Completed") {
+        this.items.forEach((value) => {
+          this.pendingOrders.push(value);
+        });
+        this.orderarray = this.completedOrders;
+      }
+      this.$vs.loading.close();
     },
   },
 };

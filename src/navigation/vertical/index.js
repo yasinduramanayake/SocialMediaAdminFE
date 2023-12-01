@@ -3,10 +3,12 @@ export default [
     title: "Dashboard",
     route: "home",
     icon: "HomeIcon",
+    role: "Admin",
   },
   {
     title: "Category",
     icon: "CheckCircleIcon",
+    role: "Admin",
     children: [
       {
         title: "All categories",
@@ -17,6 +19,7 @@ export default [
   {
     title: "Servies",
     icon: "CheckCircleIcon",
+    role: "Admin",
     children: [
       {
         title: "All Services",
@@ -28,16 +31,12 @@ export default [
     title: "Reviews",
     route: "",
     icon: "ThumbsUpIcon",
+    role: "Admin",
   },
   {
     title: "Orders",
     route: "orders",
     icon: "ShoppingCartIcon",
-  },
-  {
-    title: "Transactions",
-    route: "",
-    icon: "DollarSignIcon",
-    
+    role: "Admin",
   },
 ];

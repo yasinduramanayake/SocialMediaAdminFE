@@ -1,6 +1,6 @@
 export default [
   {
-    path: "/",
+    path: "/dashboard",
     name: "home",
     component: () => import("@/views/Home.vue"),
     meta: {
@@ -14,6 +14,22 @@ export default [
     },
   },
 
+  {
+    path: "/",
+    name: "login",
+    component: () => import("@/views/Login.vue"),
+    meta: {
+      layout: "full",
+    },
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: () => import("@/views/Register.vue"),
+    meta: {
+      layout: "full",
+    },
+  },
   {
     path: "/error-404",
     name: "error-404",

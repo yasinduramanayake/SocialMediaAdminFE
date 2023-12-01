@@ -5,7 +5,10 @@
       v-for="item in items"
       :key="item.header || item.title"
       :item="item"
-    />
+    >
+
+    </component>
+ 
   </ul>
 </template>
 

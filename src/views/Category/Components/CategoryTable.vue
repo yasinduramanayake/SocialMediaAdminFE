@@ -17,21 +17,18 @@
           :items="item.subcategory"
           :fields="fields"
         >
-          <template #cell(status)="data">
-            <b-badge variant="primary">Active</b-badge>
-          </template>
-          
-          
-          
           <template #cell(action)="data">
             <b-row>
               <b-col md="auto">
-                <b-button variant="success">
+                <b-button variant="success" @click="openUpdateModal(data.item)">
                   <feather-icon icon="EditIcon" class="mr-25"
                 /></b-button>
               </b-col>
               <b-col md="auto">
-                <b-button variant="danger">
+                <b-button
+                  variant="danger"
+                  @click="deleteSubCategory(data.item.id)"
+                >
                   <feather-icon icon="DeleteIcon" class="mr-25"
                 /></b-button>
               </b-col>
@@ -39,12 +36,16 @@
           </template>
         </b-table>
       </b-card>
+      <b-modal ref="updatemodal" v-model="show" hide-footer title="Update Sub Category">
+        <UpdateSubCategory :subcategorydata="selectedItem" />
+      </b-modal>
     </div>
   </div>
 </template>
 
 <script>
 import {
+  BModal,
   BCard,
   BTable,
   BBadge,
@@ -57,11 +58,16 @@ import {
   BContainer,
 } from "bootstrap-vue";
 import categoryApi from "@/Api/Modules/category";
+import UpdateSubCategory from "@/views/Category/Components/UpdateSubCategory";
+
+import subcategoryApi from "@/Api/Modules/subcategory";
 
 export default {
   name: "InstergramService",
   components: {
     BCard,
+    BModal,
+    UpdateSubCategory,
     BButton,
     BCol,
     BBadge,
@@ -74,6 +80,8 @@ export default {
   },
   data() {
     return {
+      show: false,
+      selectedItem: {},
       fields: [
         {
           key: "reference",
@@ -89,7 +97,7 @@ export default {
           // thStyle: { width: "2%" },
           // tdClass: "custom-cell-padding",
         },
-      
+
         {
           key: "type",
           label: "Type",
@@ -97,13 +105,7 @@ export default {
           // thStyle: { width: "2%" },
           // tdClass: "custom-cell-padding",
         },
-        {
-          key: "status",
-          label: "Status",
-          sortable: true,
-          // thStyle: { width: "2%" },
-          // tdClass: "custom-cell-padding",
-        },
+
         {
           key: "action",
           label: "Action",
@@ -115,7 +117,7 @@ export default {
       items: [],
     };
   },
-  async mounted() {
+  async created() {
     await this.AllCategories();
   },
 
@@ -125,8 +127,32 @@ export default {
       return "custom-cell-padding";
     },
     async AllCategories() {
-      const res = await categoryApi.AllCategories();
+      await this.$vs.loading({
+        scale: 0.8,
+      });
+      const res = await categoryApi.AllCategories().catch(() => {
+        this.$vs.loading.close();
+      });
       this.items = res.data.data;
+      this.$vs.loading.close();
+    },
+
+    async deleteSubCategory(id) {
+      await this.$vs.loading({
+        scale: 0.8,
+      });
+      await subcategoryApi
+        .DeleteSubCategory(id)
+        .then(() => {
+          this.$vs.loading.close();
+        })
+        .catch(() => {
+          this.$vs.loading.close();
+        });
+    },
+    openUpdateModal(item) {
+      this.selectedItem = item;
+      this.show = true;
     },
   },
 };

@@ -8,10 +8,23 @@ export default {
     });
   },
 
+  async UpdateCategory(id , payload) {
+    return await api.put(`/updatececategory/${id}`, payload).then((res) => {
+      notification.toast("Successfully Updated", "success");
+      window.location.href = "/categories";
+    });
+  },
+
+  async DeleteCategory(id) {
+    return await api.delete(`/deletecategory/${id}`).then((res) => {
+      notification.toast("Successfully Deleted", "success");
+      window.location.href = "/categories";
+    });
+  },
+
   async AddSubCategory(payload) {
     return await api.post("/addsubcategory", payload).then((res) => {
       notification.toast("Successfully Added", "success");
-
       window.location.href = "/categories";
     });
   },
