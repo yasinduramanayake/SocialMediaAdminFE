@@ -90,7 +90,7 @@ export default {
           status: "Pending",
         },
         {
-          status: "Processing",
+          status: "In Progress",
         },
         {
           status: "Completed",

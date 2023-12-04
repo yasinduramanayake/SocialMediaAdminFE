@@ -1,23 +1,18 @@
 <template>
   <div class="navbar-container d-flex content align-items-center">
-
     <!-- Nav Menu Toggler -->
     <ul class="nav navbar-nav d-xl-none">
       <li class="nav-item">
-        <b-link
-          class="nav-link"
-          @click="toggleVerticalMenuActive"
-        >
-          <feather-icon
-            icon="MenuIcon"
-            size="21"
-          />
+        <b-link class="nav-link" @click="toggleVerticalMenuActive">
+          <feather-icon icon="MenuIcon" size="21" />
         </b-link>
       </li>
     </ul>
 
     <!-- Left Col -->
-    <div class="bookmark-wrapper align-items-center flex-grow-1 d-none d-lg-flex">
+    <div
+      class="bookmark-wrapper align-items-center flex-grow-1 d-none d-lg-flex"
+    >
       <dark-Toggler class="d-none d-lg-block" />
     </div>
 
@@ -29,9 +24,7 @@
       >
         <template #button-content>
           <div class="d-sm-flex d-none user-nav">
-            <p class="user-name font-weight-bolder mb-0">
-              John Doe
-            </p>
+            <p class="user-name font-weight-bolder mb-0">John Doe</p>
             <span class="user-status">Admin</span>
           </div>
           <b-avatar
@@ -44,7 +37,7 @@
           />
         </template>
 
-        <b-dropdown-item link-class="d-flex align-items-center">
+        <!-- <b-dropdown-item link-class="d-flex align-items-center">
           <feather-icon
             size="16"
             icon="UserIcon"
@@ -80,14 +73,13 @@
           <span>Chat</span>
         </b-dropdown-item>
 
-        <b-dropdown-divider />
+        <b-dropdown-divider /> -->
 
-        <b-dropdown-item link-class="d-flex align-items-center">
-          <feather-icon
-            size="16"
-            icon="LogOutIcon"
-            class="mr-50"
-          />
+        <b-dropdown-item
+          link-class="d-flex align-items-center"
+          @click="localLogout"
+        >
+          <feather-icon size="16" icon="LogOutIcon" class="mr-50" />
           <span>Logout</span>
         </b-dropdown-item>
       </b-nav-item-dropdown>
@@ -97,9 +89,16 @@
 
 <script>
 import {
-  BLink, BNavbarNav, BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar,
-} from 'bootstrap-vue'
-import DarkToggler from '@core/layouts/components/app-navbar/components/DarkToggler.vue'
+  BLink,
+  BNavbarNav,
+  BNavItemDropdown,
+  BDropdownItem,
+  BDropdownDivider,
+  BAvatar,
+} from "bootstrap-vue";
+import { mapActions, mapGetters } from "vuex";
+import { clearToken } from "@/Api/index";
+import DarkToggler from "@core/layouts/components/app-navbar/components/DarkToggler.vue";
 
 export default {
   components: {
@@ -119,5 +118,13 @@ export default {
       default: () => {},
     },
   },
-}
+  methods: {
+    ...mapActions(["logout"]),
+    async localLogout() {
+      await this.logout();
+      localstorage.clear();
+
+    },
+  },
+};
 </script>

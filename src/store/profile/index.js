@@ -69,7 +69,7 @@ export default {
         await commit("CLEAR_CURRENT_USER");
       }
       await commit("CLEAR_CURRENT_USER");
-      window.location.href = "/login";
+      window.location.href = "/";
     },
     async updateCurrentUserPhotoUrl({ commit }, newUrl) {
       commit("UPDATE_USER_INFO", {

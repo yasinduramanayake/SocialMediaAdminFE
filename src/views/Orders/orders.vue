@@ -5,8 +5,8 @@
         <b-tab title="Pending">
           <OrderTable type="Pending Orders" titleProp="Pending" />
         </b-tab>
-        <b-tab title="Processing">
-          <OrderTable type="Processing Orders" titleProp="Processing" />
+        <b-tab title="In Progress">
+          <OrderTable type="Processing Orders" titleProp="In Progress" />
         </b-tab>
         <b-tab title="Completed">
           <OrderTable type="Completed Orders" titleProp="Completed" />

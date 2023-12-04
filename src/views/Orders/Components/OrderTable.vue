@@ -133,6 +133,26 @@ export default {
   async mounted() {
     await this.allOrders();
   },
+  computed: {
+    pendingArray() {
+      const selectedata = this.items.filter((value) => {
+        return value.status == "Pending";
+      });
+      return selectedata;
+    },
+    progressArray() {
+      const selectedata = this.items.filter((value) => {
+        return value.status == "In Progress";
+      });
+      return selectedata;
+    },
+    completedArray() {
+      const selectedata = this.items.filter((value) => {
+        return value.status == "Completed";
+      });
+      return selectedata;
+    },
+  },
   methods: {
     setCellPadding(value, key, item) {
       // Add a custom class to table cells based on your requirements
@@ -143,41 +163,31 @@ export default {
       this.$refs.ordermodal.show();
       this.selectedItem = data;
     },
+
     async allOrders() {
       // get all order data
       await this.$vs.loading({
         scale: 0.8,
       });
-      const res = await orderApi.Allorders().catch(() => {
-        this.$vs.loading.close();
-      });
+      const res = await orderApi.Allorders();
       this.items = res.data.data;
 
       // store data to pending orders array
 
       if (this.titleProp === "Pending") {
-        this.items.forEach((value) => {
-          this.pendingOrders.push(value);
-        });
-        this.orderarray = this.pendingOrders;
+        this.orderarray = this.pendingArray;
       }
 
       // store data to processing orders array
 
-      if (this.titleProp === "Processing") {
-        this.items.forEach((value) => {
-          this.processingOrders.push(value);
-        });
-        this.orderarray = this.pendingOrders;
+      if (this.titleProp === "In Progress") {
+        this.orderarray = this.progressArray;
       }
 
       // store data to completed orders array
 
       if (this.titleProp === "Completed") {
-        this.items.forEach((value) => {
-          this.pendingOrders.push(value);
-        });
-        this.orderarray = this.completedOrders;
+        this.orderarray = this.completedArray;
       }
       this.$vs.loading.close();
     },

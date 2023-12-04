@@ -19,4 +19,13 @@ export default {
       window.location.href = "/dashboard";
     });
   },
+  async profile() {
+    return await api.get("/profile");
+  },
+  async logout() {
+    return await api.get("/logout").then((res) => {
+      notification.toast("SuccessFully Log Out", "success");
+   
+    });
+  },
 };
